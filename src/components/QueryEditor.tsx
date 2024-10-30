@@ -9,15 +9,15 @@ import MetricCascader from './MerticCascader';
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
 export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) {
-  const onQueryModeChange = (event: QueryModeEnum) => {
-    onChange({ ...query, queryMode: event });
+  const onQueryModeChange = (value: QueryModeEnum) => {
+    onChange({ ...query, queryMode: value });
   };
 
   //
   useEffect(() => {
-    onChange({ ...query, queryMode: datasource.queryMode });
+    onChange({ ...query, queryMode: datasource.queryMode || QueryModeEnum.Builder });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [datasource.queryMode]);
 
   return (
     <>
