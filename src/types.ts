@@ -1,6 +1,11 @@
 import { DataSourceJsonData } from '@grafana/data';
 import { DataQuery } from '@grafana/schema';
 
+export enum QueryModeEnum {
+  Buildin = 'buildin',
+  Code = 'code',
+}
+
 export interface MyQuery extends DataQuery {
   queryText?: string;
   constant: number;
@@ -15,15 +20,11 @@ export interface DataPoint {
   Value: number;
 }
 
-export interface DataSourceResponse {
-  datapoints: DataPoint[];
-}
-
 /**
  * These are options configured for each DataSource instance
  */
 export interface MyDataSourceOptions extends DataSourceJsonData {
-  path?: string;
+  queryMode?: QueryModeEnum;
 }
 
 /**

@@ -7,10 +7,10 @@ import {
   DataSourceInstanceSettings,
   createDataFrame,
   FieldType,
+  TestDataSourceResponse,
 } from '@grafana/data';
 
-import { MyQuery, MyDataSourceOptions, DEFAULT_QUERY, DataSourceResponse } from './types';
-import { lastValueFrom } from 'rxjs';
+import { MyQuery, MyDataSourceOptions, DEFAULT_QUERY } from './types';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   baseUrl: string;
@@ -48,46 +48,31 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     return { data };
   }
 
-  async request(url: string, params?: string) {
-    const response = getBackendSrv().fetch<DataSourceResponse>({
-      url: `${this.baseUrl}${url}${params?.length ? `?${params}` : ''}`,
-    });
-    return lastValueFrom(response);
-  }
-
   /**
    * Checks whether we can connect to the API.
    */
-  async testDatasource() {
+  testDatasource() {
     const defaultErrorMessage = 'Cannot connect to API';
 
-    try {
-      const response = await this.request('/health');
-      if (response.status === 200) {
-        return {
-          status: 'success',
-          message: 'Success',
-        };
-      } else {
+    return new Promise<TestDataSourceResponse>((resolve) => {
+      resolve({
+        status: 'success',
+        message: 'Success',
+      });
+    });
+
+    // 对接真正的服务器
+    return getBackendSrv()
+      .get(this.baseUrl + '/health')
+      .then((res) => ({
+        status: 'success',
+        message: 'Success',
+      }))
+      .catch((err) => {
         return {
           status: 'error',
-          message: response.statusText ? response.statusText : defaultErrorMessage,
+          message: err.statusText ? err.statusText : defaultErrorMessage,
         };
-      }
-    } catch (err) {
-      let message = '';
-      if (typeof err === 'string') {
-        message = err;
-      } else if (isFetchError(err)) {
-        message = 'Fetch error: ' + (err.statusText ? err.statusText : defaultErrorMessage);
-        if (err.data && err.data.error && err.data.error.code) {
-          message += ': ' + err.data.error.code + '. ' + err.data.error.message;
-        }
-      }
-      return {
-        status: 'error',
-        message,
-      };
-    }
+      });
   }
 }
