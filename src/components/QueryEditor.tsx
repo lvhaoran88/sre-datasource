@@ -1,45 +1,40 @@
-import React, { ChangeEvent } from 'react';
-import { InlineField, Input, Stack } from '@grafana/ui';
+import React, { useEffect } from 'react';
+import { InlineField } from '@grafana/ui';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from '../datasource';
-import { MyDataSourceOptions, MyQuery } from '../types';
+import { MyDataSourceOptions, MyQuery, QueryModeEnum } from '../types';
+import QueryMode from './QueryMode';
+import MetricCascader from './MerticCascader';
 
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
-export function QueryEditor({ query, onChange, onRunQuery }: Props) {
-  const onQueryTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...query, queryText: event.target.value });
+export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) {
+  const onQueryModeChange = (event: QueryModeEnum) => {
+    onChange({ ...query, queryMode: event });
   };
 
-  const onConstantChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...query, constant: parseFloat(event.target.value) });
-    // executes the query
-    onRunQuery();
-  };
-
-  const { queryText, constant } = query;
+  //
+  useEffect(() => {
+    onChange({ ...query, queryMode: datasource.queryMode });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <Stack gap={0}>
-      <InlineField label="Constant">
-        <Input
-          id="query-editor-constant"
-          onChange={onConstantChange}
-          value={constant}
-          width={8}
-          type="number"
-          step="0.1"
-        />
+    <>
+      <InlineField label="查询模式" labelWidth={20} tooltip="非专业人员请勿使用 Code 模式查询">
+        <QueryMode value={query.queryMode || datasource.queryMode} onChange={onQueryModeChange} />
       </InlineField>
-      <InlineField label="Query Text" labelWidth={16} tooltip="Not used yet">
-        <Input
-          id="query-editor-query-text"
-          onChange={onQueryTextChange}
-          value={queryText || ''}
-          required
-          placeholder="Enter a query"
-        />
-      </InlineField>
-    </Stack>
+      {query.queryMode === QueryModeEnum.Buildin ? (
+        <InlineField label="指标项" labelWidth={20} tooltip="请选择指标项">
+          <MetricCascader
+            getOptionsService={datasource.listMetrics}
+            onChange={(value) => {
+              onChange({ ...query, metricName: value });
+              onRunQuery(); // 查询
+            }}
+          />
+        </InlineField>
+      ) : null}
+    </>
   );
 }

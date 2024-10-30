@@ -1,23 +1,31 @@
-import { getBackendSrv, isFetchError } from '@grafana/runtime';
+import { getBackendSrv } from '@grafana/runtime';
 import {
   CoreApp,
   DataQueryRequest,
   DataQueryResponse,
   DataSourceApi,
   DataSourceInstanceSettings,
-  createDataFrame,
-  FieldType,
   TestDataSourceResponse,
 } from '@grafana/data';
 
-import { MyQuery, MyDataSourceOptions, DEFAULT_QUERY } from './types';
+import { MyQuery, MyDataSourceOptions, DEFAULT_QUERY, QueryModeEnum } from './types';
+import { CascaderOption } from '@grafana/ui';
+import { metricOptions, timeSeriesData } from 'mock';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   baseUrl: string;
+  queryMode: QueryModeEnum;
 
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
     this.baseUrl = instanceSettings.url!;
+    this.queryMode = instanceSettings.jsonData?.queryMode ?? QueryModeEnum.Buildin;
+  }
+
+  listMetrics(): Promise<CascaderOption[]> {
+    return new Promise<CascaderOption[]>((resolve) => {
+      resolve(metricOptions);
+    });
   }
 
   getDefaultQuery(_: CoreApp): Partial<MyQuery> {
@@ -29,23 +37,14 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     return !!query.queryText;
   }
 
-  async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
-    const { range } = options;
-    const from = range!.from.valueOf();
-    const to = range!.to.valueOf();
+  query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
+    // const { range } = options;
+    // const from = range!.from.valueOf();
+    // const to = range!.to.valueOf();
 
-    // Return a constant for each query.
-    const data = options.targets.map((target) => {
-      return createDataFrame({
-        refId: target.refId,
-        fields: [
-          { name: 'Time', values: [from, to], type: FieldType.time },
-          { name: 'Value', values: [target.constant, target.constant], type: FieldType.number },
-        ],
-      });
+    return new Promise<DataQueryResponse>((resolve) => {
+      resolve({ data: timeSeriesData });
     });
-
-    return { data };
   }
 
   /**

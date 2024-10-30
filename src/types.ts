@@ -9,6 +9,9 @@ export enum QueryModeEnum {
 export interface MyQuery extends DataQuery {
   queryText?: string;
   constant: number;
+  //
+  queryMode: QueryModeEnum;
+  metricName: string;
 }
 
 export const DEFAULT_QUERY: Partial<MyQuery> = {
