@@ -12,6 +12,7 @@ export interface MyQuery extends DataQuery {
   //
   queryMode: QueryModeEnum;
   metricName: string;
+  promql: string;
 }
 
 export const DEFAULT_QUERY: Partial<MyQuery> = {

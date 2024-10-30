@@ -5,6 +5,7 @@ import { DataSource } from '../datasource';
 import { MyDataSourceOptions, MyQuery, QueryModeEnum } from '../types';
 import QueryMode from './QueryMode';
 import MetricCascader from './MerticCascader';
+import PromqlQuery from './PromqlQuery';
 
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
@@ -34,7 +35,13 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
             }}
           />
         </InlineField>
-      ) : null}
+      ) : (
+        <InlineField label="PromQL" labelWidth={20} tooltip="请输入 PromQL 查询语句" grow={true}>
+          <div style={{ height: 32 }}>
+            <PromqlQuery value={query.promql} onChange={(value) => onChange({ ...query, promql: value })} />
+          </div>
+        </InlineField>
+      )}
     </>
   );
 }
