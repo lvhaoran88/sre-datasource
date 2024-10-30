@@ -20,7 +20,7 @@ export function ConfigEditor(props: Props) {
       <h3>编辑配置</h3>
       <InlineField label="默认查询模式" labelWidth={26}>
         <QueryMode
-          value={options.jsonData.queryMode ?? QueryModeEnum.Buildin}
+          value={options.jsonData.queryMode ?? QueryModeEnum.Builder}
           onChange={(value) => {
             onOptionsChange({
               ...options,

@@ -13,7 +13,7 @@ const QueryMode: React.FC<QueryModeProps> = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={[
-        { label: QueryModeEnum.Buildin, value: QueryModeEnum.Buildin },
+        { label: QueryModeEnum.Builder, value: QueryModeEnum.Builder },
         { label: QueryModeEnum.Code, value: QueryModeEnum.Code },
       ]}
     />

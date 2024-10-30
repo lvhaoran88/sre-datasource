@@ -19,7 +19,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
     this.baseUrl = instanceSettings.url!;
-    this.queryMode = instanceSettings.jsonData?.queryMode ?? QueryModeEnum.Buildin;
+    this.queryMode = instanceSettings.jsonData?.queryMode ?? QueryModeEnum.Builder;
   }
 
   listMetrics(): Promise<CascaderOption[]> {

@@ -24,7 +24,7 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
       <InlineField label="查询模式" labelWidth={20} tooltip="非专业人员请勿使用 Code 模式查询">
         <QueryMode value={query.queryMode || datasource.queryMode} onChange={onQueryModeChange} />
       </InlineField>
-      {query.queryMode === QueryModeEnum.Buildin ? (
+      {query.queryMode === QueryModeEnum.Builder ? (
         <InlineField label="指标项" labelWidth={20} tooltip="请选择指标项">
           <MetricCascader
             getOptionsService={datasource.listMetrics}

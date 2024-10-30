@@ -2,7 +2,7 @@ import { DataSourceJsonData } from '@grafana/data';
 import { DataQuery } from '@grafana/schema';
 
 export enum QueryModeEnum {
-  Buildin = 'buildin',
+  Builder = 'builder',
   Code = 'code',
 }
 
