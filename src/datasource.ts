@@ -10,7 +10,7 @@ import {
 
 import { MyQuery, MyDataSourceOptions, DEFAULT_QUERY, QueryModeEnum } from './types';
 import { CascaderOption } from '@grafana/ui';
-import { metricOptions, timeSeriesData } from 'mock';
+import { metricOptions, mockTimeSeriesData } from 'mock';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   baseUrl: string;
@@ -43,7 +43,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     // const to = range!.to.valueOf();
 
     return new Promise<DataQueryResponse>((resolve) => {
-      resolve({ data: timeSeriesData });
+      resolve(mockTimeSeriesData(options));
     });
   }
 
