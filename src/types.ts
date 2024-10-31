@@ -7,21 +7,9 @@ export enum QueryModeEnum {
 }
 
 export interface MyQuery extends DataQuery {
-  queryText?: string;
-  constant: number;
-  //
   queryMode: QueryModeEnum;
   metricName: string;
   promql: string;
-}
-
-export const DEFAULT_QUERY: Partial<MyQuery> = {
-  constant: 6.5,
-};
-
-export interface DataPoint {
-  Time: number;
-  Value: number;
 }
 
 /**

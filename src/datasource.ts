@@ -1,6 +1,5 @@
 import { getBackendSrv } from '@grafana/runtime';
 import {
-  CoreApp,
   DataQueryRequest,
   DataQueryResponse,
   DataSourceApi,
@@ -8,7 +7,7 @@ import {
   TestDataSourceResponse,
 } from '@grafana/data';
 
-import { MyQuery, MyDataSourceOptions, DEFAULT_QUERY, QueryModeEnum } from './types';
+import { MyQuery, MyDataSourceOptions, QueryModeEnum } from './types';
 import { CascaderOption } from '@grafana/ui';
 import { metricOptions, mockTimeSeriesData } from 'mock';
 
@@ -26,15 +25,6 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     return new Promise<CascaderOption[]>((resolve) => {
       resolve(metricOptions);
     });
-  }
-
-  getDefaultQuery(_: CoreApp): Partial<MyQuery> {
-    return DEFAULT_QUERY;
-  }
-
-  filterQuery(query: MyQuery): boolean {
-    // if no query has been provided, prevent the query from being executed
-    return !!query.queryText;
   }
 
   query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
