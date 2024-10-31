@@ -68,7 +68,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
 
     // 对接真正的服务器
     return getBackendSrv()
-      .get(this.baseUrl + '/health')
+      .get(this.baseUrl + '/test/')
       .then((res) => ({
         status: 'success',
         message: 'Success',
