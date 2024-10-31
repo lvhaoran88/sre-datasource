@@ -21,10 +21,13 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     this.queryMode = instanceSettings.jsonData?.queryMode ?? QueryModeEnum.Builder;
   }
 
+  /**远端请求查询内置指标*/
   listMetrics(): Promise<CascaderOption[]> {
     return new Promise<CascaderOption[]>((resolve) => {
       resolve(metricOptions);
     });
+
+    return getBackendSrv().get(`${this.baseUrl}/metrics/`);
   }
 
   query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
