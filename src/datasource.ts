@@ -41,10 +41,16 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     // const { range } = options;
     // const from = range!.from.valueOf();
     // const to = range!.to.valueOf();
+    console.log('options: ', options);
+    const requestData = {
+      scopedVars: options.scopedVars,
+      targets: options.targets,
+    };
 
     return new Promise<DataQueryResponse>((resolve) => {
       resolve(mockTimeSeriesData(options));
     });
+    return getBackendSrv().post<DataQueryResponse>(`${this.baseUrl}/query/`, requestData);
   }
 
   /**
