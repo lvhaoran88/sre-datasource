@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { InlineField } from '@grafana/ui';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from '../datasource';
@@ -20,6 +20,12 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [datasource.queryMode]);
 
+  // 获取监控指标项
+  const getOptionsService = useCallback(() => {
+    // 存在 this 指向问题，请一定要使用这种方式调用
+    return datasource.listMetrics();
+  }, [datasource]);
+
   return (
     <>
       <InlineField label="查询模式" labelWidth={20} tooltip="非专业人员请勿使用 Code 模式查询">
@@ -28,7 +34,7 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
       {query.queryMode === QueryModeEnum.Builder ? (
         <InlineField label="指标项" labelWidth={20} tooltip="请选择指标项">
           <MetricCascader
-            getOptionsService={datasource.listMetrics}
+            getOptionsService={getOptionsService}
             onChange={(value) => {
               onChange({ ...query, metricName: value });
               onRunQuery(); // 查询
